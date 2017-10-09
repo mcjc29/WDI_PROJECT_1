@@ -40,27 +40,51 @@ function answersubEx() {
 }
 // console.log(answersubEx());
 
+function randomNumber(isOdd, min, max){
+  let num = Math.floor(Math.random() * (max - min) +min);
+  if (isOdd && num % 2 === 0) num +=1;
+  if (!isOdd && num % 2 === 1) num +=1;
+  // console.log(num);
+  return num;
+}
 
+function generateBracketPair(arr) {
+  const openIndex = randomNumber(false, 0, arr.length -1);
+  const closeIndex = randomNumber(false, openIndex +1, arr.length -1);
+  //arr.splice(openIndex, 0, openBracket;
+  arr[openIndex] = openBracket.concat(arr[openIndex]);
+  arr[closeIndex] = arr[closeIndex].concat(closeBracket);
+  console.log(arr[openIndex]);
+  console.log(arr[closeIndex]);
+  return arr;
+}
 
-var arraySubEx = [];
-let randomOddNumber = Math.ceil(Math.random() * (10 - 1) + 1);
-if (randomOddNumber % 2 === 0) randomOddNumber +=1;
-console.log(randomOddNumber);
+function generateExp() {
+  var arraySubEx = [];
+  const arrayLength = randomNumber(true, 1, 20);
+  for (var i = 0; i < arrayLength; i++) {
+    if (i % 2 === 0) {
+      arraySubEx.push(subExpression());
+    } else arraySubEx.push(operator());
 
-for (var i = 0; i < randomOddNumber; i++) {
-  arraySubEx.push(subExpression());
-  if (i === 0 || i % 2 === 1 && i !== randomOddNumber) {
-    arraySubEx.push(operator());
+    //arraySubEx.push(i % 2 === 0 ? subExpression() : operator());
   }
+  const numberOfPairs = Math.random() * (arrayLength/2);
+  for(i =0; i< numberOfPairs; i++){
+    arraySubEx = generateBracketPair(arraySubEx);
+  }
+  return arraySubEx;
 }
-console.log(arraySubEx);
+
+generateExp();
+console.log(generateExp());
+//
+
+
+// console.log(arraySubEx);
 
 
 
-
-function bracket() {
-
-}
 
 // console.log(bracketed());
 
