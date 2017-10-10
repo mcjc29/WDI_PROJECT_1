@@ -1,0 +1,26 @@
+body {
+  background-color: black;
+  color: #55ff55;
+  font-family: monospace;
+  font-size:26px;
+}
+
+input {
+  background-color: black;
+  color: #55ff55;
+  font-family: monospace;
+  font-size:26px;
+  }
+button {
+  background-color: black;
+  color: #55ff55;
+  font-family: monospace;
+  font-size:26px;
+  }
+  
+.output {
+  display:none;
+}
+.active:after {
+  content: '_';
+}
