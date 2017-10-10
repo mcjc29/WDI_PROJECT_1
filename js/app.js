@@ -14,9 +14,9 @@ if subexpression = 0 the change html to false
 
 let $problem = null;
 let $stats = null;
-let $submit  = null;
+let $submit = null;
 let $input = null;
-// let currentExpression = null;
+
 let stats = 0;
 
 const operators = ['||', '&&'];
@@ -28,18 +28,18 @@ const closeBracket = ')';
 $(init);
 
 function init() {
-  $problem       = $('.problem');
-  $stats         = $('.stats');
-  $submit        = $('input[type="submit"]');
-  $input         = $('input[type="text"]');
+  $problem = $('.problem');
+  $stats = $('.stats');
+  $submit = $('input[type="submit"]');
+  $input = $('input[type="text"]');
 
   $('button').on('click', startGame);
-
 }
 
 function startGame() {
   generateExp();
-  $submit.on('click', checkAnswer());
+  console.log(correctAnswer());
+  $submit.on('click', checkAnswer);
 }
 
 function emptyOrNot(){
@@ -51,7 +51,6 @@ function tvVal(){
 function operator(){
   return `${operators[Math.floor(operators.length * Math.random())]}`;
 }
-
 function subExpression() {
   return `${emptyOrNot()} ${tvVal()} ${operator()} ${emptyOrNot()} ${tvVal()}`;
 }
@@ -74,21 +73,15 @@ function generateBracketPair(arr) {
   const lastItem = arr.length - 2;
   const openIndex = randomNumber(false, 0, arr.length - 4);
   const closeIndex = randomNumber(false, openIndex + 1, lastItem);
-  //arr.splice(openIndex, 0, openBracket;
-  // console.log(arr);
-  // console.log(`openindex: ${openIndex}, closeIndex: ${closeIndex}`);
   arr[openIndex] = openBracket.concat(arr[openIndex]);
   arr[closeIndex] = (arr[closeIndex]).concat(closeBracket);
-  // console.log(eval(arr.join(' ')));
-  // console.log(`what is open ${arr[openIndex]}`);
-  // console.log(`what is close ${arr[closeIndex]}`);
   return arr;
 }
 
 function generateExp() {
   var arraySubEx = [];
   // const arrayLength = randomNumber(true, 1, 11);
-  const arrayLength = randomNumber(true, 2, 11);
+  const arrayLength = randomNumber(true, 2, 9);
   for (var i = 0; i < arrayLength; i++) {
     if (i % 2 === 0) {
       arraySubEx.push(subExpression());
@@ -102,14 +95,17 @@ function generateExp() {
     arraySubEx = generateBracketPair(arraySubEx);
   }
   $problem.html(arraySubEx.join(' '));
-
   return arraySubEx.join(' ');
 }
 
+function correctAnswer() {
+  return eval(generateExp().toString());
+}
+
 function checkAnswer() {
-  const userAnswer = $input.val('');
-  const expressionAnswer = eval(generateExp()).toString();
-  if (userAnswer === expressionAnswer) {
+  const userAnswer = $input.val();
+  console.log(userAnswer);
+  if (userAnswer === correctAnswer) {
     stats++;
     updateScore();
   } else {
