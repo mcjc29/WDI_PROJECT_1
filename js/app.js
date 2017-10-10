@@ -16,7 +16,6 @@ let $problem = null;
 let $stats = null;
 let $submit = null;
 let $input = null;
-
 let stats = 0;
 
 const operators = ['||', '&&'];
@@ -38,7 +37,7 @@ function init() {
 
 function startGame() {
   generateExp();
-  console.log(correctAnswer());
+  // console.log(correctAnswer());
   $submit.on('click', checkAnswer);
 }
 
@@ -98,13 +97,10 @@ function generateExp() {
   return arraySubEx.join(' ');
 }
 
-function correctAnswer() {
-  return eval(generateExp().toString());
-}
-
 function checkAnswer() {
   const userAnswer = $input.val();
-  console.log(userAnswer);
+  const correctAns = eval(generateExp());
+  const correctAnswer = correctAns.toString();
   if (userAnswer === correctAnswer) {
     stats++;
     updateScore();
@@ -115,6 +111,12 @@ function checkAnswer() {
 }
 
 function updateScore() {
-  if (stats >= 0) $stats.html(stats);
+  if (stats >= 0) $stats.html(stats) ;
   $input.val('');
+  generateExp();
 }
+//
+// function levelOne() {
+//   if (stats < 3)
+//   else levelTwo
+// }
