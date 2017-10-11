@@ -1,4 +1,4 @@
-var $lines = $('.prompt p');
+var $lines = $('.prompt');
 
 $lines.hide();
 var lineContents = new Array();
@@ -6,34 +6,35 @@ var lineContents = new Array();
 function terminal() {
   const skip = 0;
 
-  function typeLine(idx) {
-    idx === null && (idx = 0);
-    const element = $lines.eq(idx);
-    const content = lineContents[idx];
+  function typeLine(index) {
+    index === null && (index = 0);
+    const element = $lines.eq(index);
+    //.eqinteger 0 element
+    let content = lineContents[index];
     if (typeof content === 'undefined') {
       $('.skip').hide();
       return;
     }
-    var charIdx = 0;
+    let characterindex = 0;
 
-    function typeChar() {
+    function typeCharacter() {
       const rand = Math.round(Math.random() * 150) + 25;
 
       setTimeout(function() {
-        var char = content[charIdx++];
-        element.append(char);
-        if(typeof char !== 'undefined')
-        typeChar();
+        const character = content[characterindex++];
+        element.append(character);
+        if(typeof character !== 'undefined')
+          typeCharacter();
         else {
           element.append('<br/><span class="output">' + element.text().slice(9, -1) + '</span>');
           element.removeClass('active');
-          typeLine(++idx);
+          typeLine(++index);
         }
       }, skip ? 0 : rand);
     }
     content = '' + content + '';
     element.append(' ').addClass('active');
-    typeChar();
+    typeCharacter();
   }
 
   $lines.each(function(i) {
