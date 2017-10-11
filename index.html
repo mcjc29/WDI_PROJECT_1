@@ -11,20 +11,21 @@
   <script src="js/app.js" charset="utf-8"></script>
 </head>
 <body>
-  <header>
-    <h1>WDI Project</h1>
-  </header>
-  <main class="prompt">
-    <div class="name_gen">
-      <h2>Hello (RNG)</h2>
+  <main>
+    <div class="first_screen">
+      <h1>WDI Project</h1>
+      <p>Enter class names</p>
+      <input id="getNames" type="text">
+      <input class="submit" type="submit">
     </div>
+    <div class="second_screen">
+      <h2>Hello <span class="name"></span></h2>
     <div class="problem">True or False?</div>
-    <button>Begin</button>
-    <input type="text">
-    <input type="submit">
-    <div class="statsscore">
+    <input id="answer" type="text">
+    <div class="stats_score">
       Stats: <span class="stats">0</span>
     </div>
+  </div>
   </main>
 </body>
 </html>

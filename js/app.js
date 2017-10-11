@@ -15,12 +15,12 @@ if subexpression = 0 the change html to false
 
 let $problem = null;
 let $stats = null;
-let $submit = null;
 let $input = null;
 let stats = 0;
 let timeouts = [];
-
-const currentExpression = null;
+let $getNames = null;
+let $submit = null;
+let $name =  null;
 
 const operators = ['||', '&&'];
 const emptyOrNor = ['', '!'];
@@ -33,21 +33,44 @@ $(init);
 function init() {
   $problem = $('.problem');
   $stats = $('.stats');
-  $submit = $('input[type="submit"]');
   $input = $('input[type="text"]');
+  $getNames = $('#getNames');
+  $submit = $('input[type="submit"]');
+  $name = $('.name');
 
-  $('button').on('click', startGame);
+  // $('button').on('click', startGame);
+  $submit.on('click', getRandomName);
+  transitions();
+}
+
+function transitions() {
+  $('.second_screen').hide();
+  $('.first_screen').hide(0).fadeIn(4000);
+  $('.submit').one('click', function(){
+    $('.first_screen').hide();
+    $('.second_screen').hide(0).fadeIn(4000);
+    startGame();
+  });
 }
 
 function startGame() {
   reset();
   generateExpression();
-  // $submit.on('click', checkAnswer);
-  $input.keyup(function(event) {
-    if (event.keycode === 13) {
-      checkAnswer;
+  $input.on('keypress', function(e) {
+    if (e.which === 13) {
+      const userAnswer = $input.val();
+      checkAnswer(userAnswer);
     }
   });
+}
+// function focus() {
+//   $('.input').focus();
+// }
+
+function getRandomName() {
+  const arrayNames = $getNames.val().split(' ');
+  var randomName = arrayNames[(Math.floor(Math.random() * arrayNames.length))];
+  return  $name.html(`${randomName}!`);
 }
 
 function reset() {
@@ -56,7 +79,7 @@ function reset() {
 }
 
 function generateExpression() {
-  var arraySubEx = [];
+  let arraySubEx = [];
   const arrayLength = randomNumber(true, 2, 9);
   for (var i = 0; i < arrayLength; i++) {
     arraySubEx.push(i % 2 === 0 ? subExpression() : operator());
@@ -119,12 +142,10 @@ function generateBracketPair(arr) {
   return arr;
 }
 
-function checkAnswer() {
-  const userAnswer = $input.val();
+function checkAnswer(userAnswer) {
+  // const userAnswer = $input.val();
   const expression = generateExpression();
   const correctAnswer = eval(expression).toString();
-  // const correctAnswer = eval(currentExpression).toString();
-  // console.log(currentExpression);
   if (userAnswer === correctAnswer) {
     stats++;
     updateScore();
