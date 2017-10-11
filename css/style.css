@@ -11,13 +11,10 @@ h1 {
   line-height: 50px;
 }
 
-.second_screen {
-  line-height: 50px;
-}
-#answer {
+/*#answer {
   border: none;
-}
+}*/
 
-input:focus {
+/*input:focus {
     outline: none;
-}
+}*/

@@ -28,6 +28,9 @@ const tValue = [true, false];
 const openBracket = '(';
 const closeBracket = ')';
 
+let locations = [];
+
+
 $(init);
 
 function init() {
@@ -139,13 +142,61 @@ function generateBracketPair(arr) {
   const closeIndex = randomNumber(false, openIndex + 1, lastItem);
   arr[openIndex] = openBracket.concat(arr[openIndex]);
   arr[closeIndex] = (arr[closeIndex]).concat(closeBracket);
+
+  locations[openIndex] = openBracket;
+  locations[closeIndex] = closeBracket;
+  console.log(locations);
   return arr;
+}
+
+function findDeepestLocation() {
+  let currentDepth = 0;
+  let start = 0;
+  let end = 0;
+  if (locations.length > 0) {
+    let nextOpen = locations.indexOf(openBracket);
+    let nextClose = locations.indexOf(closeBracket);
+    let subEx;
+    while(nextOpen !== -1 && nextClose !== -1) {
+      nextOpen = subEx.indexOf(openBracket);
+      nextClose = subEx.indexOf(closeBracket);
+      subEx = locations.slice(nextOpen, nextClose);
+    }
+    return {
+      start: subEx[0],
+      end: subEx[subEx.length -1]
+    };
+  }else return null;
+}
+
+function simplify(expression){
+  let subEx = '';
+
+  const deepest = findDeepestLocation();
+  if(deepest === null) return expression;
+  console.log(deepest);
+  subEx = expression.slice(deepest.start, deepest.end);
+  console.log(subEx);
+  const result = eval(subEx).toString();
+
+  locations.splice(deepest.start, subEx.length);
+
+  const simpler = expression.splice(deepest.start, subEx.length, result);
+  console.log(simpler);
+  return simpler;
 }
 
 function checkAnswer(userAnswer) {
   // const userAnswer = $input.val();
   const expression = generateExpression();
-  const correctAnswer = eval(expression).toString();
+
+  let partialAnswer = expression;
+
+  while (locations.length > 0) {
+    partialAnswer = simplify(expression).toString();
+    console.log(partialAnswer.toString());
+  }
+  const correctAnswer = eval(partialAnswer).toString();
   if (userAnswer === correctAnswer) {
     stats++;
     updateScore();
@@ -158,7 +209,7 @@ function checkAnswer(userAnswer) {
 function updateScore() {
   if (stats >= 0) $stats.html(stats) ;
   $input.val('');
-  generateExpression();
+  // generateExpression();
 }
 
 //
