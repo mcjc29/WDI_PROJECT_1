@@ -18,6 +18,9 @@ let $stats = null;
 let $submit = null;
 let $input = null;
 let stats = 0;
+let timeouts = [];
+
+const currentExpression = null;
 
 const operators = ['||', '&&'];
 const emptyOrNor = ['', '!'];
@@ -37,8 +40,19 @@ function init() {
 }
 
 function startGame() {
+  reset();
   generateExpression();
-  $submit.on('click', checkAnswer);
+  // $submit.on('click', checkAnswer);
+  $input.keyup(function(event) {
+    if (event.keycode === 13) {
+      checkAnswer;
+    }
+  });
+}
+
+function reset() {
+  stats = 0;
+  $stats.html(stats);
 }
 
 function generateExpression() {
@@ -53,15 +67,16 @@ function generateExpression() {
     arraySubEx = generateBracketPair(arraySubEx);
   }
 
-  const toBeRenamed = arraySubEx.join(' ').split('');
+  const currentExpression = arraySubEx.join(' ').split('');
   $problem.empty();
 
-  toBeRenamed.forEach((letter, i) => setTimeout(() => {
-    $problem.append(letter);
-  }, i * 150) + 25);
+  timeouts = timeouts.map(timeout => clearTimeout(timeout)).filter(Boolean);
 
-  // $problem.html(arraySubEx.join(' '));
-  // return arraySubEx.join(' ');
+  timeouts = currentExpression.map((letter, i) => setTimeout(() => {
+    $problem.append(letter);
+  }, (i * 150) + Math.floor(Math.random() * 60)));
+
+  return currentExpression.join('');
 }
 
 function randomNumber(isOdd, min, max) {
@@ -106,8 +121,10 @@ function generateBracketPair(arr) {
 
 function checkAnswer() {
   const userAnswer = $input.val();
-  const correctAns = eval(generateExpression());
-  const correctAnswer = correctAns.toString();
+  const expression = generateExpression();
+  const correctAnswer = eval(expression).toString();
+  // const correctAnswer = eval(currentExpression).toString();
+  // console.log(currentExpression);
   if (userAnswer === correctAnswer) {
     stats++;
     updateScore();
