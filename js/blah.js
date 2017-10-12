@@ -1,5 +1,7 @@
-// const expression = '(!true&&(true&&true)||(false&&false))';
-const expression = '(!true&&(true&&(true&&true))||(false && false))';
+// const expression = '(!true && (true && true) || (false && false))';
+const expression = '(!true && (true && true) || (false && false || (true || true)) || (!false && true))';
+// const expression = '(!true && (true && (true && true)) || (false && false))';
+
 const leftBracketsIndices = charPos(expression, '(');
 const rightBracketsIndices = charPos(expression, ')');
 const bracketPairs = zipArrays(leftBracketsIndices, rightBracketsIndices);
@@ -36,6 +38,7 @@ function higherNumbers(n, arr) {
 function replaceBetween(str, start, end, newStr) {
   return str.substring(0, start) + newStr + str.substring(end);
 }
+
 
 function resolve(str, arr) {
   let memo = str;
