@@ -195,7 +195,8 @@ function resolve(str) {
       prevEnd = arr[i-1][1];
       console.log('prevEnd', prevEnd);
       // Find out the new start index after a potential change
-      if (newStart > prevStart) newStart = pair[0] - offset;
+      if (newStart > prevStart) newStart = pair[0];
+      //deleted offset
       console.log('newStart', newStart);
       // Find out the new end index after a potential change
       if (newEnd > prevEnd) newEnd = (pair[1] - offset) + 1;
