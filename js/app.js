@@ -57,7 +57,7 @@ function transitions() {
 }
 
 function startGame() {
-  reset();
+  // reset();
   generateExpression();
   $input.on('keypress', function(e) {
     if (e.which === 13) {
@@ -76,10 +76,10 @@ function getRandomName() {
   return  $name.html(`${randomName}!`);
 }
 
-function reset() {
-  stats = 0;
-  $stats.html(stats);
-}
+// function reset() {
+//   stats = 0;
+//   $stats.html(stats);
+// }
 
 function generateExpression() {
   let arraySubEx = [];
@@ -92,6 +92,7 @@ function generateExpression() {
   for(let j = 0; j < numberOfPairs; j++){
     arraySubEx = generateBracketPair(arraySubEx);
   }
+
 
   const currentExpression = arraySubEx.join(' ').split('');
   $problem.empty();
@@ -187,16 +188,14 @@ function simplify(expression){
 }
 
 function checkAnswer(userAnswer) {
-  // const userAnswer = $input.val();
-  const expression = generateExpression();
-
-  let partialAnswer = expression;
-
+  // const expression = generateExpression();
+  let correctAnswer = expression;
   while (locations.length > 0) {
     partialAnswer = simplify(expression).toString();
     console.log(partialAnswer.toString());
   }
-  const correctAnswer = eval(partialAnswer).toString();
+
+  eval(expression).toString();
   if (userAnswer === correctAnswer) {
     stats++;
     updateScore();
