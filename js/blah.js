@@ -1,5 +1,5 @@
 // const expression = '(!true&&(true&&true)||(false&&false))';
-const expression = '(!true && (true && (true && true)) || (false && false))';
+const expression = '(!true&&(true&&(true&&true))||(false && false))';
 const leftBracketsIndices = charPos(expression, '(');
 const rightBracketsIndices = charPos(expression, ')');
 const bracketPairs = zipArrays(leftBracketsIndices, rightBracketsIndices);
@@ -37,43 +37,32 @@ function replaceBetween(str, start, end, newStr) {
   return str.substring(0, start) + newStr + str.substring(end);
 }
 
-// function resolve(str, arr) {
-//   let offset = 0;
-//   let memo = str;
-//   let newEnd;
-//   arr.forEach(pair => {
-//     const start = pair[0];
-//     newEnd = pair[1] + 1;
-//     const subexpression = memo.slice(start, newEnd);
-// console.log('subexpression', subexpression)
-//     const subResult = eval(subexpression);
-// console.log(subResult)
-//     offset = subResult.toString().length;
-// console.log(memo, start, offset, subResult)
-//     memo = replaceBetween(memo, start, newEnd, subResult);
-//     // Update dom
-//     console.log('memo', memo);
-//   });
-// }
-
 function resolve(str, arr) {
-  let offset;
   let memo = str;
-  let subResult;
+  const versions = [];
+  let subResult, subexpression, newStart, newEnd, prevStart, prevEnd, offset, lengthRemoved, lengthAdded;
+
   arr.forEach((pair, i, arr) => {
-    const start = pair[0];
-    let newEnd;
-    if (i && arr[i-1][1] < pair[1]) {
-      newEnd = (pair[1] - offset) + 1;
-    } else {
-      newEnd = pair[1] + 1;
+    newStart = pair[0];
+    newEnd = pair[1] + 1;
+    // If it's not the first array...
+    if (i) {
+      // Get the values of the previous start and end
+      prevStart = arr[i-1][0];
+      prevEnd = arr[i-1][1];
+      // Find out the new start index after a potential change
+      if (newStart > prevStart) newStart = pair[0] - offset;
+      // Find out the new end index after a potential change
+      if (newEnd > prevEnd) newEnd = (pair[1] - offset) + 1;
     }
-    const subexpression = memo.slice(start, newEnd);
-console.log('subexpression', subexpression)
+    subexpression = memo.slice(newStart, newEnd);
     subResult = eval(subexpression);
-    offset = subResult.toString().length;
-    memo = replaceBetween(memo, start, newEnd, subResult);
+    lengthRemoved = subexpression.length;
+    lengthAdded = subResult.toString().length;
+    offset = lengthRemoved - lengthAdded;
+    memo = replaceBetween(memo, newStart, newEnd, subResult);
     // Update dom
-    console.log('memo', memo);
+    versions.push(memo);
   });
+  console.log(versions);
 }
