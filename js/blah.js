@@ -1,5 +1,5 @@
 // const expression = '(!true && (true && true) || (false && false))';
-const expression = '(!true && (true && true) || (false && false || (true || true)) || (!false && true))';
+// const expression = '(!true && (true && true) || (false && false || (true || true)) || (!false && true))';
 // const expression = '(!true && (true && (true && true)) || (false && false))';
 
 const leftBracketsIndices = charPos(expression, '(');

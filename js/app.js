@@ -58,19 +58,15 @@ function transitions() {
 }
 
 function startGame() {
-  // reset();
+  reset();
   generateExpression();
   $input.on('keypress', function(e) {
     if (e.which === 13) {
       const userAnswer = $input.val();
       checkAnswer(userAnswer);
-      resolve();
     }
   });
 }
-// function focus() {
-//   $('.input').focus();
-// }
 
 function getRandomName() {
   const arrayNames = $getNames.val().split(' ');
@@ -78,16 +74,16 @@ function getRandomName() {
   return  $name.html(`${randomName}!`);
 }
 
-// function reset() {
-//   stats = 0;
-//   $stats.html(stats);
-// }
+function reset() {
+  stats = 0;
+  $stats.html(stats);
+}
 
 function generateExpression() {
   let arraySubEx = [];
   const arrayLength = randomNumber(true, 2, 9);
   for (var i = 0; i < arrayLength; i++) {
-    arraySubEx.push(i % 2 === 0 ? subExpression() : operator());
+    arraySubEx.push(i % 2 === 0 ? subExp() : operator());
   }
 
   const numberOfPairs = Math.random() * (arrayLength / 2);
@@ -130,7 +126,7 @@ function operator(){
   return `${operators[Math.floor(operators.length * Math.random())]}`;
 }
 
-function subExpression() {
+function subExp() {
   return `${emptyOrNot()} ${tvVal()} ${operator()} ${emptyOrNot()} ${tvVal()}`;
 }
 
@@ -176,7 +172,6 @@ function replaceBetween(str, start, end, newStr) {
   return str.substring(0, start) + newStr + str.substring(end);
 }
 
-
 function resolve(str) {
   const leftBracketsIndices = charPos(expression, '(');
   const rightBracketsIndices = charPos(expression, ')');
@@ -199,7 +194,6 @@ function resolve(str) {
       // Find out the new end index after a potential change
       if (newEnd > prevEnd) newEnd = (pair[1] - offset) + 1;
     }
-    console.log(memo);
     subexpression = memo.slice(newStart, newEnd);
     subResult = eval(subexpression);
     lengthRemoved = subexpression.length;
@@ -223,25 +217,18 @@ function resolve(str) {
   });
 }
 
-function checkAnswer(userAnswer, lastVersion) {
-  if (userAnswer === lastVersion) {
+function checkAnswer(userAnswer) {
+  const ans = eval(resolve).toString();
+  if (userAnswer === ans) {
     stats++;
     updateScore();
   } else {
     stats--;
     updateScore();
   }
-
   resolve(expression);
 }
-//
 function updateScore() {
   if (stats >= 0) $stats.html(stats) ;
   $input.val('');
 }
-//
-// //
-// function levelOne() {
-//   if (stats < 3)
-//   else levelTwo
-// }
