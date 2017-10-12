@@ -30,7 +30,6 @@ const closeBracket = ')';
 
 let locations = [];
 
-
 $(init);
 
 function init() {
@@ -94,16 +93,16 @@ function generateExpression() {
   }
 
 
-  const currentExpression = arraySubEx.join(' ').split('');
+  const neod = arraySubEx.join(' ').split('');
   $problem.empty();
 
   timeouts = timeouts.map(timeout => clearTimeout(timeout)).filter(Boolean);
 
-  timeouts = currentExpression.map((letter, i) => setTimeout(() => {
+  timeouts = neod.map((letter, i) => setTimeout(() => {
     $problem.append(letter);
   }, (i * 150) + Math.floor(Math.random() * 60)));
 
-  return currentExpression.join('');
+  return neod.join('');
 }
 
 function randomNumber(isOdd, min, max) {
@@ -158,7 +157,9 @@ function findDeepestLocation() {
     let nextOpen = locations.indexOf(openBracket);
     let nextClose = locations.indexOf(closeBracket);
     let subEx;
-    while(nextOpen !== -1 && nextClose !== -1) {
+    while(nextOpen !== -1 && nextClose !== -1)
+//-1 = not present
+     {
       nextOpen = subEx.indexOf(openBracket);
       nextClose = subEx.indexOf(closeBracket);
       subEx = locations.slice(nextOpen, nextClose);
@@ -172,7 +173,6 @@ function findDeepestLocation() {
 
 function simplify(expression){
   let subEx = '';
-
   const deepest = findDeepestLocation();
   if(deepest === null) return expression;
   console.log(deepest);
@@ -189,13 +189,12 @@ function simplify(expression){
 
 function checkAnswer(userAnswer) {
   // const expression = generateExpression();
-  let correctAnswer = expression;
+  let partialAnswer = expression;
   while (locations.length > 0) {
     partialAnswer = simplify(expression).toString();
     console.log(partialAnswer.toString());
   }
-
-  eval(expression).toString();
+  const correctAnswer = eval(partialAnswer).toString();
   if (userAnswer === correctAnswer) {
     stats++;
     updateScore();
@@ -208,7 +207,7 @@ function checkAnswer(userAnswer) {
 function updateScore() {
   if (stats >= 0) $stats.html(stats) ;
   $input.val('');
-  // generateExpression();
+  generateExpression();
 }
 
 //
