@@ -59,8 +59,11 @@ function transitions() {
 }
 
 function startGame() {
-  reset();
   generateExpression();
+  // setTimeout(() => {
+  //   generateExpression();
+  // }, 10000);
+
   $input.on('keypress', function(e) {
     if (e.which === 13) {
       const userAnswer = $input.val();
@@ -75,14 +78,14 @@ function getRandomName() {
   return  $name.html(`${randomName}!`);
 }
 
-function reset() {
-  score = 0;
-  $score.html(score);
-}
+// function reset() {
+//   score = 0;
+//   $score.html(score);
+// }
 
 function generateExpression() {
   let arraySubEx = [];
-  const arrayLength = randomNumber(true, 2, 9);
+  const arrayLength = randomNumber(true, 2, 11);
   for (var i = 0; i < arrayLength; i++) {
     arraySubEx.push(i % 2 === 0 ? subExp() : operator());
   }
@@ -188,22 +191,29 @@ function resolve(str) {
     if (i) {
       // Get the values of the previous start and end
       prevStart = arr[i-1][0];
+      console.log('preStart', prevStart);
       prevEnd = arr[i-1][1];
+      console.log('prevEnd', prevEnd);
       // Find out the new start index after a potential change
       if (newStart > prevStart) newStart = pair[0] - offset;
+      console.log('newStart', newStart);
       // Find out the new end index after a potential change
       if (newEnd > prevEnd) newEnd = (pair[1] - offset) + 1;
+      console.log('newEnd', newEnd);
     }
     subexpression = memo.slice(newStart, newEnd);
     subResult = eval(subexpression);
     lengthRemoved = subexpression.length;
+    // console.log('lengthRemoved', lengthRemoved);
     lengthAdded = subResult.toString().length;
+    // console.log('lengthAdded', lengthAdded);
+    //always 4 true and 5false
     offset = lengthRemoved - lengthAdded;
     memo = replaceBetween(memo, newStart, newEnd, subResult);
     // Update dom
     versions.push(memo);
+  console.log(versions);
   });
-
   lastVersion = versions[versions.length - 1];
   if (lastVersion !== true || lastVersion !== false) {
     versions.push(eval(lastVersion));
@@ -226,11 +236,20 @@ function checkAnswer(userAnswer) {
     score--;
     updateScore();
   }
-  console.log(finalAnswer);
-  console.log(userAnswer);
+  // console.log(finalAnswer);
+  // console.log(userAnswer);
+  // $input.on('keypress', function(e) {
+  //   if (e.which === 13) {
+  //     generateExpression();
+  //   }
+  // });
 }
 
 function updateScore() {
   if (score >= 0) $score.html(score) ;
   $input.val('');
 }
+//
+// function reset() {
+//   $answer.html('');
+// }
