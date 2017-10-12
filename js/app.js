@@ -15,9 +15,9 @@ if subexpression = 0 the change html to false
 
 let $problem = null;
 let $answer = null;
-let $stats = null;
+let $score = null;
 let $input = null;
-let stats = 0;
+let score = 0;
 let timeouts = [];
 let $getNames = null;
 let $submit = null;
@@ -30,14 +30,15 @@ const openBracket = '(';
 const closeBracket = ')';
 
 let expression;
+let lastVersion;
 
 $(init);
 
 function init() {
   $problem = $('.problem');
   $answer = $('.answer');
-  $stats = $('.stats');
-  $input = $('input[type="text"]');
+  $score = $('.score');
+  $input = $('#userInput');
   $getNames = $('#getNames');
   $submit = $('input[type="submit"]');
   $name = $('.name');
@@ -75,8 +76,8 @@ function getRandomName() {
 }
 
 function reset() {
-  stats = 0;
-  $stats.html(stats);
+  score = 0;
+  $score.html(score);
 }
 
 function generateExpression() {
@@ -129,7 +130,6 @@ function operator(){
 function subExp() {
   return `${emptyOrNot()} ${tvVal()} ${operator()} ${emptyOrNot()} ${tvVal()}`;
 }
-
 
 function generateBracketPair(arr) {
   const lastItem = arr.length - 2;
@@ -204,31 +204,33 @@ function resolve(str) {
     versions.push(memo);
   });
 
-  const lastVersion = versions[versions.length - 1];
+  lastVersion = versions[versions.length - 1];
   if (lastVersion !== true || lastVersion !== false) {
     versions.push(eval(lastVersion));
   }
-
   versions.forEach((version, i) => {
     setTimeout(() => {
       $answer.append(version);
       $answer.append('<br>');
-    }, ((i+1) * 3000));
+    }, ((i+1) * 1000));
   });
 }
 
 function checkAnswer(userAnswer) {
-  const ans = eval(resolve).toString();
-  if (userAnswer === ans) {
-    stats++;
+  resolve(expression);
+  const finalAnswer = eval(lastVersion).toString();
+  if (userAnswer === finalAnswer) {
+    score++;
     updateScore();
   } else {
-    stats--;
+    score--;
     updateScore();
   }
-  resolve(expression);
+  console.log(finalAnswer);
+  console.log(userAnswer);
 }
+
 function updateScore() {
-  if (stats >= 0) $stats.html(stats) ;
+  if (score >= 0) $score.html(score) ;
   $input.val('');
 }
