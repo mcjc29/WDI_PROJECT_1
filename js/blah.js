@@ -1,10 +1,18 @@
 // const expression = '(!true && (true && true) || (false && false))';
-const expression = '(true && (true && (true && true)) && (true && true)) || (true || false)';
+// const expression = '(true && (true && (true && true)) && (true && true)) || (true || false)';
 // const expression = '(true && (true && (true && true)) && (true && true)) || (true || false && true || true)';
 // const expression = '(true && true) && (true && true) || (true || false && true || true)';
 
 
 // const expression = '(!true && (true && (true && true)) || (false && false))';
+
+DONT WORK
+const expression = 'false ||  false || ( true &&  false || ( true ||  true || ( false || ! true && ! true &&  false)))'
+const expression = '! true &&  false && ((! true && ! false &&  false &&  true || ((! true &&  true) && ( false &&  false) ||  true &&  false)))'
+const expression = '! false &&  false && ( true && ! true || (( false || ! false) && ((! true && ! true)) &&  false &&  false))'
+const expression = '! true && ! false || (( true ||  true && ( true &&  false &&  true &&  false &&  false || ! true) || ! false && ! false))'
+const expression = ' false ||  true && (! false ||  true && (( true && ! false && ! true || ! false)) || (( true || ! false) || ! false ||  false))'
+const expression ='false && ! false && (( true ||  false || (( true ||  false) && ((! true &&  false && ! false && ! true)) ||  true && ! true)))'
 
 const leftBracketsIndices = charPos(expression, '(');
 const rightBracketsIndices = charPos(expression, ')');
@@ -51,23 +59,24 @@ function resolve(str, arr) {
 
   arr.forEach((pair, i, arr) => {
     newStart = pair[0];
-  // console.log(newStart);
+  console.log(newStart);
     newEnd = pair[1] + 1;
   console.log(newEnd);
 
     // If it's not the first array...
     if (i) {
-    // console.log(i);
+    console.log(i);
       // Get the values of the previous start and end
       prevStart = arr[i-1][0];
-    // console.log(prevStart);
+    console.log(prevStart);
       prevEnd = arr[i-1][1];
     console.log(prevEnd);
       // Find out the new start index after a potential change
-      if (newEnd < prevEnd) newStart = pair[0];
+      if (newStart < prevStart) newStart = pair[0] - offset;
       // Find out the new end index after a potential change
       if (newEnd > prevEnd) newEnd = (pair[1] - offset) + 1;
     }
+    console.log(newEnd);
     subexpression = memo.slice(newStart, newEnd);
     subResult = eval(subexpression);
     lengthRemoved = subexpression.length;

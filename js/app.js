@@ -176,6 +176,7 @@ function replaceBetween(str, start, end, newStr) {
 }
 
 function resolve(str) {
+  console.log(str);
   const leftBracketsIndices = charPos(expression, '(');
   const rightBracketsIndices = charPos(expression, ')');
   const arr = zipArrays(leftBracketsIndices, rightBracketsIndices);
@@ -183,21 +184,24 @@ function resolve(str) {
   const versions = [];
   let subResult, subexpression, newStart, newEnd;
 
-  arr.forEach((unused, i, newArr) => {
+  arr.forEach((pair, i, newArr) => {
     newStart = newArr[i][0];
     newEnd = newArr[i][1] + 1;
     subexpression = memo.slice(newStart, newEnd);
     subResult = eval(subexpression);
     memo = replaceBetween(memo, newStart, newEnd, subResult);
+console.log(memo);
     versions.push(memo);
     const leftBracketsIndices = charPos(memo, '(');
     const rightBracketsIndices = charPos(memo, ')');
     newArr = zipArrays(leftBracketsIndices, rightBracketsIndices);
   });
+
   lastVersion = versions[versions.length - 1];
   if (lastVersion !== true || lastVersion !== false) {
     versions.push(eval(lastVersion));
-    console.log(versions);
+
+console.log(versions);
   }
   versions.forEach((version, i) => {
     setTimeout(() => {
@@ -209,6 +213,7 @@ function resolve(str) {
 
 function checkAnswer(userAnswer) {
   resolve(expression);
+  console.log(lastVersion);
   const finalAnswer = eval(lastVersion).toString();
   if (userAnswer === finalAnswer) {
     score++;
