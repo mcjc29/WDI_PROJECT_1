@@ -184,36 +184,50 @@ function resolve(str) {
   const versions = [];
   let subResult, subexpression, newStart, newEnd, prevStart, prevEnd, offset, lengthRemoved, lengthAdded;
 
-  arr.forEach((pair, i, arr) => {
-    newStart = pair[0];
-    newEnd = pair[1] + 1;
+  arr.forEach((pair, i, newArr) => {
+    newStart = newArr[i][0];
+    console.log('new start', newStart);
+    newEnd = newArr[i][1] + 1;
+    console.log('new end', newEnd);
+
     // If it's not the first array...
-    if (i) {
-      // Get the values of the previous start and end
-      prevStart = arr[i-1][0];
-      console.log('preStart', prevStart);
-      prevEnd = arr[i-1][1];
-      console.log('prevEnd', prevEnd);
-      // Find out the new start index after a potential change
-      if (newStart > prevStart) newStart = pair[0];
-      //deleted offset
-      console.log('newStart', newStart);
-      // Find out the new end index after a potential change
-      if (newEnd > prevEnd) newEnd = (pair[1] - offset) + 1;
-      console.log('newEnd', newEnd);
-    }
+// if (i) {
+//   // Get the values of the previous start and end
+//   prevStart = arr[i-1][0];
+//   console.log('preStart', prevStart);
+//   prevEnd = arr[i-1][1];
+//   console.log('prevEnd', prevEnd);
+//   // Find out the new start index after a potential change
+//   if (newStart > prevStart) {
+//     newStart = pair[0] - offset;
+//   }
+//   //deleted offset
+//   // console.log('newStart', newStart);
+//   // Find out the new end index after a potential change
+//   if (newEnd > prevEnd) newEnd = (pair[1] - offset) + 1;
+//   console.log('newEnd', newEnd);
+// }
     subexpression = memo.slice(newStart, newEnd);
     subResult = eval(subexpression);
-    lengthRemoved = subexpression.length;
+// arr.splice(newStart, (newEnd-newStart), subResult.toString().splice())
+
+// lengthRemoved = subexpression.length;
     // console.log('lengthRemoved', lengthRemoved);
-    lengthAdded = subResult.toString().length;
-    // console.log('lengthAdded', lengthAdded);
+    // lengthAdded = subResult.toString().length;
+// console.log('lengthAdded', lengthAdded);
     //always 4 true and 5false
-    offset = lengthRemoved - lengthAdded;
+// offset = lengthRemoved - lengthAdded;
     memo = replaceBetween(memo, newStart, newEnd, subResult);
     // Update dom
     versions.push(memo);
-  console.log(versions);
+  // console.log(versions);
+
+  const leftBracketsIndices = charPos(memo, '(');
+  const rightBracketsIndices = charPos(memo, ')');
+    newArr = zipArrays(leftBracketsIndices, rightBracketsIndices);
+console.log('memo', memo)
+console.log(newArr)
+
   });
   lastVersion = versions[versions.length - 1];
   if (lastVersion !== true || lastVersion !== false) {

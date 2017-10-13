@@ -1,5 +1,9 @@
 // const expression = '(!true && (true && true) || (false && false))';
-// const expression = '(!true && (true && true) || (false && false || (true || true)) || (!false && true))';
+const expression = '(true && (true && (true && true)) && (true && true)) || (true || false)';
+// const expression = '(true && (true && (true && true)) && (true && true)) || (true || false && true || true)';
+// const expression = '(true && true) && (true && true) || (true || false && true || true)';
+
+
 // const expression = '(!true && (true && (true && true)) || (false && false))';
 
 const leftBracketsIndices = charPos(expression, '(');
@@ -47,14 +51,20 @@ function resolve(str, arr) {
 
   arr.forEach((pair, i, arr) => {
     newStart = pair[0];
+  // console.log(newStart);
     newEnd = pair[1] + 1;
+  console.log(newEnd);
+
     // If it's not the first array...
     if (i) {
+    // console.log(i);
       // Get the values of the previous start and end
       prevStart = arr[i-1][0];
+    // console.log(prevStart);
       prevEnd = arr[i-1][1];
+    console.log(prevEnd);
       // Find out the new start index after a potential change
-      if (newStart > prevStart) newStart = pair[0] - offset;
+      if (newEnd < prevEnd) newStart = pair[0];
       // Find out the new end index after a potential change
       if (newEnd > prevEnd) newEnd = (pair[1] - offset) + 1;
     }
