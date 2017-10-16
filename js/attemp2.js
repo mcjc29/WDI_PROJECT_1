@@ -7,6 +7,12 @@
 // const expression ='false && ! false && (( true ||  false || (( true ||  false) && ((! true &&  false && ! false && ! true)) ||  true && ! true)))'
 
 //parsing - lexical analysis
+// const expression = 'false ||  false || ( true &&  false || ( true ||  true || ( false || ! true && ! true &&  false)))';
+
+// precedence of logical operators !...&&...||
+const expression = 'true (! false || ! true && ! true)';
+// 
+// console.log(tokenizer(expression));
 
 function tokenizer(input) {
   // tracking position
@@ -41,6 +47,40 @@ function tokenizer(input) {
       current++;
       continue;
     }
+    //
+    // //  check for logical operators:
+    if (char === '&') {
+      //push new token with the type `operator` and set value
+      tokens.push({
+        type: 'operator',
+        value: '&'
+      });
+      // increment `current`
+      current++;
+
+      // `continue` onto the next cycle of the loop.
+      continue;
+    }
+
+    if (char === '!') {
+      tokens.push({
+        type: 'operator',
+        value: '!'
+      });
+      current++;
+      continue;
+    }
+
+    if (char === '|') {
+      tokens.push({
+        type: 'operator',
+        value: '|'
+      });
+      current++;
+      continue;
+    }
+    // Hey! Cant seem to push a new token for the logical operators.
+
     //check for whitespace
     let WHITESPACE = /\s/;
     if (WHITESPACE.test(char)) {
@@ -48,18 +88,6 @@ function tokenizer(input) {
       continue;
     }
 
-    // let TV = 'true'; 'false';
-    //
-    // if (TV.test(char)) {
-    //   let value = '';
-    //
-    //   while (TV.test(char)) {
-    //     value += char;
-    //     char = input[++current];
-    //   }
-    //   tokens.push({ type: 'tv', value });
-    //   continue;
-    // }
     //
     // let OPERATOR = '&&'; '||'; '!';
     //
@@ -75,7 +103,9 @@ function tokenizer(input) {
     // }
 
     // names of operators and truth vales
+
     let LETTERS = /[a-z]/i;
+
     if (LETTERS.test(char)) {
       let value = '';
       while (LETTERS.test(char)) {
@@ -91,7 +121,7 @@ function tokenizer(input) {
   return tokens;
 }
 
-//parsing - syntactic analysis
+//PARSER - syntactic analysis
 
 function parser(tokens) {
   let current = 0;
@@ -151,4 +181,52 @@ function parser(tokens) {
   }
 
   return ast;
+}
+
+//TRAVERSER
+
+// // define traverser function which accepts an AST and a visitor.
+function traverser(ast, visitor) {
+  //   //iterate over array and call next function
+  function traverseArray(array, parent) {
+    array.forEach(child => {
+      traverseNode(child, parent);
+    });
+  }
+  //
+  //   //accept a `node` and its `parent` node to pass both
+  function traverseNode(node, parent) {
+    //test for  existence of a method on the visitor with a matching `type`.
+    let methods = visitor[node.type];
+    // If there is an `enter` method for this node type we'll call it with the
+    //     // `node` and its `parent`.
+    if (methods && methods.enter) {
+      methods.enter(node, parent);
+    }
+
+    // split things up by the current node type.
+    switch (node.type) {
+      //start with top level `Program`
+      //Program nodes have a property named body that has an array of nodes = traverse array and thus traverse nodes = traverse recusively
+      case 'Program':
+        traverseArray(node.body, node);
+        break;
+      // and call expression
+      case 'CallExpression':
+        traverseArray(node.params, node);
+        break;
+      //striung no child so break
+      case 'StringLiteral':
+        break;
+      //error if unrecognised
+      default:
+        throw new TypeError(node.type);
+    }
+    //if exit method then do to both node and parent
+    if (methods && methods.exit) {
+      methods.exit(node, parent);
+    }
+  }
+  //call traverser with ast - obv no parent
+  traverseNode(ast, null);
 }
