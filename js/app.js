@@ -60,9 +60,6 @@ function transitions() {
 
 function startGame() {
   generateExpression();
-  // setTimeout(() => {
-  //   generateExpression();
-  // }, 10000);
 
   $input.on('keypress', function(e) {
     if (e.which === 13) {
@@ -77,11 +74,6 @@ function getRandomName() {
   var randomName = arrayNames[(Math.floor(Math.random() * arrayNames.length))];
   return  $name.html(`${randomName}!`);
 }
-
-// function reset() {
-//   score = 0;
-//   $score.html(score);
-// }
 
 function generateExpression() {
   let arraySubEx = [];

@@ -10,9 +10,9 @@
 // const expression = 'false ||  false || ( true &&  false || ( true ||  true || ( false || ! true && ! true &&  false)))';
 
 // precedence of logical operators !...&&...||
-const expression = 'true (! false || ! true && ! true)';
-// 
-// console.log(tokenizer(expression));
+const expression = 'true (false || true && true)';
+//
+console.log(tokenizer(expression));
 
 function tokenizer(input) {
   // tracking position
@@ -23,63 +23,84 @@ function tokenizer(input) {
 
   while (current < input.length) {
     //store the `current` character in the `input`
-
+    //
     let char = input[current];
-
-    //  check for open parenthesis:
-    if (char === '(') {
-      //push new token with the type `paren` and set value
-      tokens.push({
-        type: 'paren',
-        value: '('
-      });
-      // increment `current`
-      current++;
-
-      // `continue` onto the next cycle of the loop.
-      continue;
-    }
-    if (char === ')') {
-      tokens.push({
-        type: 'paren',
-        value: ')'
-      });
-      current++;
-      continue;
-    }
+    //
+    // //  check for open parenthesis:
+    // if (char === '(') {
+    //   //push new token with the type `paren` and set value
+    //   tokens.push({
+    //     type: 'paren',
+    //     value: '('
+    //   });
+    //   // increment `current`
+    //   current++;
+    //
+    //   // `continue` onto the next cycle of the loop.
+    //   continue;
+    // }
+    // if (char === ')') {
+    //   tokens.push({
+    //     type: 'paren',
+    //     value: ')'
+    //   });
+    //   current++;
+    //   continue;
+    // }
     //
     // //  check for logical operators:
-    if (char === '&') {
-      //push new token with the type `operator` and set value
-      tokens.push({
-        type: 'operator',
-        value: '&'
-      });
-      // increment `current`
-      current++;
-
-      // `continue` onto the next cycle of the loop.
-      continue;
-    }
-
-    if (char === '!') {
-      tokens.push({
-        type: 'operator',
-        value: '!'
-      });
-      current++;
-      continue;
-    }
-
-    if (char === '|') {
-      tokens.push({
-        type: 'operator',
-        value: '|'
-      });
-      current++;
-      continue;
-    }
+    // if (char === '&') {
+    //   //push new token with the type `operator` and set value
+    //   tokens.push({
+    //     type: 'operator',
+    //     value: '&'
+    //   });
+    //   // increment `current`
+    //   current++;
+    //
+    //   // `continue` onto the next cycle of the loop.
+    //   continue;
+    // }
+    //
+    // if (char === '!') {
+    //   tokens.push({
+    //     type: 'operator',
+    //     value: '!'
+    //   });
+    //   current++;
+    //   continue;
+    // }
+    //
+    // if (char === '|') {
+    //   tokens.push({
+    //     type: 'operator',
+    //     value: '|'
+    //   });
+    //   current++;
+    //   continue;
+    // }
     // Hey! Cant seem to push a new token for the logical operators.
+    let BRACKETS = /(!\(|\(|\))/;
+    if (BRACKETS.test(char)) {
+      let value = '';
+      while (BRACKETS.test(char)) {
+        value += char;
+        char = input[++current];
+      }
+      tokens.push({ type: 'brackets', value });
+      continue;
+    }
+    // WILL NOT RECOGNISE OPERATOR !
+    let OPERATORS = /(&&|\|\|)/;
+    if (OPERATORS.test(char)) {
+      let value = '';
+      while (OPERATORS.test(char)) {
+        value += char;
+        char = input[++current];
+      }
+      tokens.push({ type: 'operator', value });
+      continue;
+    }
 
     //check for whitespace
     let WHITESPACE = /\s/;
@@ -88,24 +109,9 @@ function tokenizer(input) {
       continue;
     }
 
-    //
-    // let OPERATOR = '&&'; '||'; '!';
-    //
-    // if (OPERATOR.test(char)) {
-    //   let value = '';
-    //
-    //   while (OPERATOR.test(char)) {
-    //     value += char;
-    //     char = input[++current];
-    //   }
-    //   tokens.push({ type: 'operator', value });
-    //   continue;
-    // }
-
     // names of operators and truth vales
 
     let LETTERS = /[a-z]/i;
-
     if (LETTERS.test(char)) {
       let value = '';
       while (LETTERS.test(char)) {

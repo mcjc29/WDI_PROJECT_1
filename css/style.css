@@ -3,6 +3,7 @@ body, input, button {
   color: #55ff55;
   font-family: monospace;
   font-size:26px;
+  margin: 20px;
 }
 h1 {
   text-align: center;
