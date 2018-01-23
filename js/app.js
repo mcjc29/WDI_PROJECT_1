@@ -77,7 +77,7 @@ function getRandomName() {
 
 function generateExpression() {
   let arraySubEx = [];
-  const arrayLength = randomNumber(true, 2, 11);
+  const arrayLength = randomNumber(true, 2, 10);
   for (var i = 0; i < arrayLength; i++) {
     arraySubEx.push(i % 2 === 0 ? subExp() : operator());
   }
@@ -176,7 +176,7 @@ function resolve(str) {
   const versions = [];
   let subResult, subexpression, newStart, newEnd;
 
-  arr.forEach((pair, i, newArr) => {
+  arr.forEach((unused, i, newArr) => {
     newStart = newArr[i][0];
     newEnd = newArr[i][1] + 1;
     subexpression = memo.slice(newStart, newEnd);
